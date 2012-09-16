@@ -1,5 +1,7 @@
 <?php
-$series_id = $series_arr[0]['series']['series_id'];
+/*
+ * Get the logs of a particular series
+ */
 $series_log_arr = array();
 $i = 0;
 // Doubles Match

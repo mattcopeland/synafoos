@@ -18,7 +18,7 @@ require_once('lib/series.php');
 </head>
 
 <body>
-<div id="content">
+<section id="content">
 	<header role="logo"><h1><a href="/foosball/">syna<span>foos</span></a></h1></header>
 	<?php
 	foreach ($series_arr as $s)
@@ -100,7 +100,7 @@ require_once('lib/series.php');
 		</form>
 	</div>
 	<div id="mask"></div>
-</div>
+</section>
 <!-- Scripts -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="js/winner.js"></script>

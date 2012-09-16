@@ -1,3 +1,5 @@
+/* Page Layout
+---------------------------------*/
 body {
 	background: #cdcdcd;
 	font-family: Helvetica,Arial,Verdana,sans-serif;
@@ -9,6 +11,24 @@ body {
 #content.home {
 	width: 980px;
 }
+#main {
+	float: left;
+	margin-right: 10px;
+	overflow: hidden;
+	width: 582px;
+}
+#sidebar {
+	float: left;
+	width: 388px;
+}
+/* Common
+---------------------------------*/
+header[role=component] h2 {
+	font-family: "Nunito", sans-serif;
+	font-size: 1.75em;
+	margin-bottom: 5px;
+}
+
 /* Logo
 ---------------------------------*/
 header[role=logo] {
@@ -31,20 +51,7 @@ header[role=logo] h1 a span {
 	color: #2a2a2a;
 	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
 }
-.ball {
-	background: #febbbb; /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover,  #febbbb 0%, #fe9090 45%, #ff5c5c 100%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#febbbb), color-stop(45%,#fe9090), color-stop(100%,#ff5c5c)); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover,  #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover,  #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover,  #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* IE10+ */
-	background: radial-gradient(ellipse at center,  #febbbb 0%,#fe9090 45%,#ff5c5c 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#febbbb', endColorstr='#ff5c5c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-	border-radius: 23px;
-	height: 40px;
-	margin-right: 19px;
-	width: 40px;	
-}
+
 /* Series
 ---------------------------------*/
 .series {
@@ -60,6 +67,9 @@ header[role=logo] h1 a span {
 	margin-right: 10px;
 	padding: 10px;
 	width: 264px;
+}
+.home .series:nth-child(even) {
+	margin-right: 0;
 }
 .team {
 	background: #fff;
@@ -198,33 +208,6 @@ header[role=logo] h1 a span {
 .team .wins b.minus:hover {
 	color: #f00;
 }
-/*
-.log_link {
-    position: absolute;
-    right: -64px;
-    top: 49px;
-	-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg);
-	-ms-transform: rotate(90deg);
-	-o-transform: rotate(90deg);
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
-}
-.log_link a {
-	background: #dcdcdc;
-	border: 1px solid #aaa;
-	border-bottom: none;
-	border-radius: 6px 6px 0 0;
-	color: #000;
-	display: block;
-    font-size: .8em;
-	letter-spacing: .05em;
-	line-height: .9em;
-    padding: 8px 5px 5px;
-	text-align: center;
-	text-decoration: none;
-	width: 90px;
-}
-*/
 .log_link {
 	background: transparent;
 	background: rgba(0, 0, 0, 0);
@@ -262,6 +245,9 @@ header[role=logo] h1 a span {
 	padding: 10px;
 	width: 403px;	
 }
+.home .series_log {
+	width: auto;
+}
 .series_log > div:nth-child(even) {
 	background: #eee;
 }
@@ -285,10 +271,18 @@ header[role=logo] h1 a span {
 	width: 149px;
 	text-align: center;
 }
+.home .series_log .winner,
+.home .series_log .loser {
+	width: 134px;
+}
 .series_log .time,
 .series_log .date {
 	width: 127px;
 	text-align: center;
+}
+.home .series_log .time,
+.home .series_log .date {
+	width: 100px;
 }
 
 /* Password  Prompt
