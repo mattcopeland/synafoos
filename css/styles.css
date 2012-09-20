@@ -24,26 +24,32 @@ body {
 /* Common
 ---------------------------------*/
 header[role=component] h2 {
+	color: #2a2a2a;
 	font-family: "Nunito", sans-serif;
 	font-size: 1.75em;
 	margin-bottom: 5px;
+	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
 }
 
 /* Logo
 ---------------------------------*/
 header[role=logo] {
-	margin: 10px 0 0;
+	margin: 10px 0;
 	overflow: hidden;
 }
 header[role=logo] h1 {
 	text-align: center;
 }
 header[role=logo] h1 a {
+	background: #eee;
+	border-radius: 10px;
 	color: #ffc515;
+	display: block;
 	font-family: 'Luckiest Guy', georgia;
 	font-size: 3.5em;
 	font-weight: 400;
 	line-height: 1em;
+	padding-top: 13px;
 	text-decoration: none;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
 }
@@ -68,7 +74,7 @@ header[role=logo] h1 a span {
 	padding: 10px;
 	width: 264px;
 }
-.home .series:nth-child(even) {
+.home .series:nth-child(odd) {
 	margin-right: 0;
 }
 .team {
@@ -221,19 +227,25 @@ header[role=logo] h1 a span {
 }
 .log_link a {
 	background: transparent;
-	color: #fff;
+	color: #ffc515;
 	display: block;
+	font-size: 1.5em;
 	height: 144px;
 	line-height: 142px;
 	opacity: 0;
 	filter: alpha(opacity = 0);
-	text-align: center;	
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 0 1px 0 #2a2a2a,0 -1px 0 #2a2a2a,1px 0 0 #2a2a2a,-1px 0 0 #2a2a2a;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
 	width: 286px;
+
 }
 .log_link a:hover {
 	opacity: 1;
 	filter: alpha(opacity = 100);
-
 }
 /* Series Log
 ---------------------------------*/

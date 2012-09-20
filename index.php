@@ -22,6 +22,9 @@ require_once('lib/series_logs.php');
 <section id="content" class="home">
 	<header role="logo"><h1><a href="/foosball/">syna<span>foos</span></a></h1></header>
 	<section id="main">
+		<header role="component">
+			<h2>Active Series</h2>
+		</header>
 		<?php
 		foreach ($series_arr as $s)
 		{
@@ -56,7 +59,7 @@ require_once('lib/series_logs.php');
 			}
 			echo '
 			<div class="log_link">
-				<a href="/foosball/series.php?s='.$s["series"]["series_id"].'">View/Update Series Log</a>
+				<a href="/foosball/series.php?s='.$s["series"]["series_id"].'">View / Update Series</a>
 			</div>
 		</div>';
 		}
@@ -85,7 +88,7 @@ require_once('lib/series_logs.php');
 			{
 				$game_date = "Today";
 			}
-			else if ((date('Ymd',$sl['date_time'] + 1)) == date('Ymd'))
+			else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
 			{
 				$game_date = "Yesterday";
 			}

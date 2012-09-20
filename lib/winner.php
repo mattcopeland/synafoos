@@ -16,6 +16,18 @@ else if ($action == 'minus') {
 }
 $result = mysql_query($query);
 
+// Make a series inactive
+$query = "SELECT wins_$winning_team,wins_goal FROM series WHERE series_id = $series_id";
+$result = mysql_query($query);
+if ($result) {
+	$series = mysql_fetch_array($result);
+	if ($series['wins_'.$winning_team] == $series['wins_goal'])
+	{
+		$query = "UPDATE series SET active = 0 WHERE series_id = $series_id";
+		$result = mysql_query($query);
+	}
+}
+
 // Update the series log
 if ($action == 'plus')
 {

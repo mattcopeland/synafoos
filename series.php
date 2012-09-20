@@ -49,7 +49,7 @@ require_once('lib/series.php');
 			<div class="wins">
 				<em>' . $s['series']['wins_'.$t] . '</em>
 				<span>wins</span>';
-				if($s['series']['wins_1'] < $s['series']['wins_goal'] && $s['series']['wins_2'] < $s['series']['wins_goal'])
+				if($s['series']['active'] == 1)
 				{
 				echo '
 				<div class="controls">
