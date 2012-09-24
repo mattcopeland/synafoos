@@ -35,14 +35,14 @@ require_once('lib/series.php');
 				if ($s['series']['players'] == 4)
 				{
 				echo '
-				<div class="player"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
-				<div class="player"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
+				<div class="player_img"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
+				<div class="player_img"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
 				}
 				// Singles Match
 				else
 				{
 				echo '
-				<div class="player"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
+				<div class="player_img"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
 				}
 			echo '
 			</div>

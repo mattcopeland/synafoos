@@ -4,6 +4,7 @@ $today = date('Ymd');
 require_once('lib/dbconnect.php');
 require_once('lib/series.php');
 require_once('lib/series_logs.php');
+require_once('lib/players.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,6 +29,8 @@ require_once('lib/series_logs.php');
 		<?php
 		foreach ($series_arr as $s)
 		{
+		if ($s['series']['active'] == 1)
+		{
 		echo '
 		<div class="series'; if ($s['series']['players'] == 4){ echo ' double'; }else{ echo ' single'; } echo' clearfix" series_id="' . $s['series']['series_id'] . '">';
 			for ($t = 1; $t <= 2; $t++)
@@ -40,14 +43,14 @@ require_once('lib/series_logs.php');
 					if ($s['series']['players'] == 4)
 					{
 					echo '
-					<div class="player"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
-					<div class="player"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
+					<div class="player_img"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
+					<div class="player_img"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
 					}
 					// Singles Match
 					else
 					{
 					echo '
-					<div class="player"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
+					<div class="player_img"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
 					}
 				echo '
 				</div>
@@ -63,6 +66,52 @@ require_once('lib/series_logs.php');
 			</div>
 		</div>';
 		}
+		}
+		?>
+		<header role="component">
+			<h2>Completed Series</h2>
+		</header>
+		<?php
+		foreach ($series_arr as $s)
+		{
+		if ($s['series']['active'] != 1)
+		{
+		echo '
+		<div class="series'; if ($s['series']['players'] == 4){ echo ' double'; }else{ echo ' single'; } echo' clearfix" series_id="' . $s['series']['series_id'] . '">';
+			for ($t = 1; $t <= 2; $t++)
+			{
+			echo '
+			<div class="team">
+				<h2>' . $s['team'.$t]['nickname'] . '</h2>
+				<div class="players">';
+					// Doubles Match
+					if ($s['series']['players'] == 4)
+					{
+					echo '
+					<div class="player_img"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
+					<div class="player_img"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
+					}
+					// Singles Match
+					else
+					{
+					echo '
+					<div class="player_img"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
+					}
+				echo '
+				</div>
+				<div class="wins">
+					<em>' . $s['series']['wins_'.$t] . '</em>
+					<span>wins</span>
+				</div>
+			</div>';
+			}
+			echo '
+			<div class="log_link">
+				<a href="/foosball/series.php?s='.$s["series"]["series_id"].'">View Series</a>
+			</div>
+		</div>';
+		}
+		}
 		?>
 	</section>
 	<aside id="sidebar">
@@ -72,35 +121,51 @@ require_once('lib/series_logs.php');
 			<h2>Recent Results</h2>
 		</header>
 		<section class="series_log">
-		<div class="series_log_head">
-			<div class="winner">Winner</div>
-			<div class="loser">Loser</div>
-			<div class="date">Date</div>
-		</div>';
-		foreach ($series_log_arr as $sl)
-		{
-		echo '
-		<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
-			<div class="winner">' . $sl['winner'] . '</div>
-			<div class="loser">' . $sl['loser'] . '</div>
-			<div class="date">';
-			if (date('Ymd',$sl['date_time']) == date('Ymd'))
+			<div class="series_log_head">
+				<div class="winner">Winner</div>
+				<div class="loser">Loser</div>
+				<div class="date">Date</div>
+			</div>';
+			foreach ($series_log_arr as $sl)
 			{
-				$game_date = "Today";
-			}
-			else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
-			{
-				$game_date = "Yesterday";
-			}
-			else
-			{
-				$game_date = date('n/j/Y',$sl['date_time']);
-			}
-			echo $game_date .'
+			echo '
+			<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
+				<div class="winner">' . $sl['winner'] . '</div>
+				<div class="loser">' . $sl['loser'] . '</div>
+				<div class="date">';
+				if (date('Ymd',$sl['date_time']) == date('Ymd'))
+				{
+					$game_date = "Today";
+				}
+				else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
+				{
+					$game_date = "Yesterday";
+				}
+				else
+				{
+					$game_date = date('n/j/Y',$sl['date_time']);
+				}
+				echo $game_date .'
+				</div>
 			</div>
-		</div>
-		';
+			';
+			}
+		echo '
+		</section>';
+		?>
+		<?php
+		echo '
+		<header role="component">
+			<h2>Players Club</h2>
+		</header>
+		<section class="players">';
+		foreach ($players_arr as $p)
+		{
+			echo '
+			<div class="player_img"><a href="/foosball/player.php?p=' . $p['player_id'] . '"><img src="images/' . $p['image'] . '.jpg" alt="' . $sp['nickname'] . '" /></a></div>';
 		}
+		echo '
+		</section>';
 		?>
 	</aside>
 </section>

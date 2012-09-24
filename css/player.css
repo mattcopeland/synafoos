@@ -1,0 +1,35 @@
+.player {
+	overflow: hidden;
+}
+.player .player_img {
+	float: left;
+	margin-right: 10px;
+}
+.player .player_info {
+	float: left;
+}
+.player .nickname {
+	color: #2a2a2a;
+	font-family: "Nunito", sans-serif;
+	font-size: 1.5em;
+	line-height: 1.25em;
+	margin-bottom: 5px;
+	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
+}
+.player .playername {
+	margin-bottom: 5px;
+}
+.player .wins_singles,
+.player .wins_doubles {
+	float: left;
+	overflow: hidden;
+}
+.player .wins_singles {
+	margin-right: 40px;
+}
+.player .wins_singles label,
+.player .wins_doubles label {
+	display: block;
+	float: left;
+	width: 55px;
+}

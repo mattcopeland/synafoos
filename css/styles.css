@@ -24,13 +24,29 @@ body {
 /* Common
 ---------------------------------*/
 header[role=component] h2 {
+	background: #eee;
+	border-radius: 6px;
+	clear: both;
 	color: #2a2a2a;
 	font-family: "Nunito", sans-serif;
-	font-size: 1.75em;
-	margin-bottom: 5px;
+	font-size: 1.5em;
+	line-height: 1.5em;
+	margin-bottom: 10px;
+	padding: 0 10px;
 	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
 }
-
+section {
+	margin-bottom: 10px;
+}
+h2 {
+	font-family: "Nunito", sans-serif;
+	font-size: 1.25em;
+	font-weight: normal;
+	margin-bottom: 8px;
+}
+.home h2 {
+	font-size: 1em;
+}
 /* Logo
 ---------------------------------*/
 header[role=logo] {
@@ -42,7 +58,7 @@ header[role=logo] h1 {
 }
 header[role=logo] h1 a {
 	background: #eee;
-	border-radius: 10px;
+	border-radius: 6px;
 	color: #ffc515;
 	display: block;
 	font-family: 'Luckiest Guy', georgia;
@@ -57,7 +73,31 @@ header[role=logo] h1 a span {
 	color: #2a2a2a;
 	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
 }
-
+/* Players
+---------------------------------*/
+.player_img {
+	border: 3px solid #ffc515;
+	border-radius: 40px;
+	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.9);
+	float: left;
+	margin: 4px;
+	width: 75px;
+}
+.home .player_img {
+	border-radius: 23px;
+	width: 40px;
+}
+.player_img img {
+	border-radius: 40px;
+	display: block;
+	height: 75px;
+	width: 75px;
+}
+.home .player_img img {
+	border-radius: 23px;
+	height: 40px;
+	width: 40px;
+}
 /* Series
 ---------------------------------*/
 .series {
@@ -96,51 +136,19 @@ header[role=logo] h1 a span {
 	margin-right: 10px;
 }
 .team h2 {
-	font-family: "Nunito", sans-serif;
-	font-size: 1.25em;
-	font-weight: normal;
 	margin: 8px auto 0;
 	text-align: center;
 }
-.home .team h2 {
-	font-size: 1em;
-}
 .team .players {
 	overflow: hidden;
-	padding: 8px;
+	padding: 4px;
 }
 .home .team .players {
-	padding: 8px 12px;
+	padding: 4px 8px;
 }
-.team .player {
-	border: 3px solid #ffc515;
-	border-radius: 40px;
-	box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.9);
-	float: left;
-	margin-left: 8px;
-	width: 75px;
-}
-.home .team .player {
-	border-radius: 23px;
-	width: 40px;
-}
-.team .player:first-child {
-	margin-left: 0;
-}
-.single .team .player:first-child {
+.single .team .player_img:first-child {
 	float: none;
-	margin: 0 auto;	
-}
-.team .player img {
-	border-radius: 40px;
-	display: block;
-	height: 75px;
-	width: 75px;
-}
-.home .team .player img {
-	border-radius: 23px;
-	height: 40px;
-	width: 40px;
+	margin: 4px auto;
 }
 .team .wins {
 	background: #e6e6e6;
@@ -253,7 +261,7 @@ header[role=logo] h1 a span {
 	background: #dcdcdc;
 	border-radius: 6px;
 	font-size: .9em;
-	margin: 0 auto;
+	margin: 0 auto 10px;
 	padding: 10px;
 	width: 403px;	
 }
