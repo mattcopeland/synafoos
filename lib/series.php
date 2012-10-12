@@ -7,7 +7,7 @@ if (isset($series_id))
 }
 else
 {
-	$query = "SELECT series_id FROM series ORDER BY series_id DESC LIMIT 10";
+	$query = "SELECT series_id FROM series ORDER BY last_updated DESC LIMIT 10";
 }	
 $result = mysql_query($query);
 if ($result) {

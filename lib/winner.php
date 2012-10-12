@@ -7,9 +7,10 @@ require_once('dbconnect.php');
 $series_id = $_POST['series_id'];
 $winning_team = $_POST['winning_team'];
 $losing_team = ($winning_team == 1 ? 2 : 1);
+$time = time();
 $action = $_POST['action'];
 if ($action == 'plus') {
-	$query = "UPDATE series SET wins_$winning_team = wins_$winning_team + 1 WHERE series_id = $series_id";
+	$query = "UPDATE series SET wins_$winning_team = wins_$winning_team + 1, last_updated = $time WHERE series_id = $series_id";
 }
 else if ($action == 'minus') {
 	$query = "UPDATE series SET wins_$winning_team = wins_$winning_team - 1 WHERE series_id = $series_id";
@@ -50,7 +51,6 @@ if ($action == 'plus')
 		$loser_id = $loser['team_'.$losing_team];
 	}
 	date_default_timezone_set("America/New_York");
-	$time = time();
 	$query = "INSERT INTO series_log (log_id, series_id, winner_id, loser_id, date_time) VALUES ('', $series_id, $winner_id, $loser_id, $time)";
 	$result = mysql_query($query);
 	
