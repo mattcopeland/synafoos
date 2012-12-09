@@ -162,7 +162,7 @@ require_once('lib/players.php');
 		foreach ($players_arr as $p)
 		{
 			echo '
-			<div class="player_img"><a href="/foosball/player.php?p=' . $p['player_id'] . '"><img src="images/' . $p['image'] . '.jpg" alt="' . $sp['nickname'] . '" /></a></div>';
+			<div class="player_img"><a href="/foosball/player.php?p=' . $p['player_id'] . '"><img src="images/' . $p['image'] . '.jpg" alt="' . $p['nickname'] . '" /></a></div>';
 		}
 		echo '
 		</section>';
