@@ -7,7 +7,7 @@ if (isset($series_id))
 }
 else
 {
-	$query = "SELECT series_id FROM series ORDER BY last_updated DESC LIMIT 10";
+	$query = "SELECT series_id FROM series ORDER BY last_updated DESC LIMIT 100";
 }	
 $result = mysql_query($query);
 if ($result) {
@@ -51,6 +51,15 @@ if ($result) {
 						$team2_player2 = mysql_fetch_assoc($result2);
 					}
 				}
+				$series_arr[$i] = array(
+					"series" => $series,
+					"team1" => $team1,
+					"team1_player1" => $team1_player1,
+					"team1_player2" => $team1_player2,
+					"team2" => $team2,
+					"team2_player1" => $team2_player1,
+					"team2_player2" => $team2_player2,
+				);
 			}
 			// Singles Matches
 			else
@@ -67,17 +76,13 @@ if ($result) {
 				if ($result2) {
 					$team2 = mysql_fetch_assoc($result2);
 				}
+				$series_arr[$i] = array(
+					"series" => $series,
+					"team1" => $team1,
+					"team2" => $team2,
+				);
 			}
 		}
-		$series_arr[$i] = array(
-			"series" => $series,
-			"team1" => $team1,
-			"team1_player1" => $team1_player1,
-			"team1_player2" => $team1_player2,
-			"team2" => $team2,
-			"team2_player1" => $team2_player1,
-			"team2_player2" => $team2_player2,
-		);
 		++$i;
 	}
 }

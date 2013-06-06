@@ -1,0 +1,56 @@
+/* Modal Mask
+---------------------------------*/
+#modal_mask {
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.3)), color-stop(100%,rgba(0,0,0,0.15))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.15) 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.15) 100%); /* W3C */
+    display: none;
+    left: 0;
+    position: absolute;
+    top: 0;
+    z-index: 9998;
+}
+#modal_window {
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(236,240,244,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(236,240,244,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(236,240,244,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(236,240,244,1) 100%); /* W3C */
+    border-radius: 6px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.3);
+    display: none;
+    padding: 20px;
+    position: absolute;
+    z-index: 9999;
+}
+#modal_window.hide {
+	-webkit-transition: all .5s ease-in;
+	-moz-transition: all .5s ease-out;
+	transition: all .5s ease-out;
+	-moz-transform: scale(0);
+	-webkit-transform: scale(0);
+	transform: scale(0);
+} 
+#modal_window.show {
+	-webkit-transition: all .5s ease-in;
+	-moz-transition: all .5s ease-in;
+	transition: all .5s ease-in;
+	-moz-transform: scale(1);
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+#modal_close {
+	border-radius: 8px;
+	color: #aaa;
+	cursor: pointer;
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	padding: 3px;
+	font-size: 12px;
+	font-weight: bold;
+	height: 10px;
+	text-align: center;
+	width: 10px;
+}

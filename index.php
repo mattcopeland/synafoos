@@ -1,4 +1,5 @@
 <?php
+//require_once('lib/auth.php');
 date_default_timezone_set('America/New_York');
 $today = date('Ymd');
 require_once('lib/dbconnect.php');
@@ -14,163 +15,151 @@ require_once('lib/players.php');
 <link rel="stylesheet" href="css/reset.css" media="all" />
 <link href='http://fonts.googleapis.com/css?family=Luckiest+Guy|Nunito:400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css" media="all" />
+<link rel="stylesheet" href="css/modal.css" media="all" />
+<link rel="stylesheet" href="css/player.css" media="all" />
+<link rel="stylesheet" href="css/match_maker.css" media="all" />
 <!--[if lt IE 9]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]--> 
 </head>
 
 <body>
-<section id="content" class="home">
-	<header role="logo"><h1><a href="/foosball/">syna<span>foos</span></a></h1></header>
+<header role="logo"><h1><a href="/foosball/">synafoos</a></h1></header>
+<section id="content" class="clearfix">
 	<section id="main">
-		<header role="component">
-			<h2>Active Series</h2>
-		</header>
-		<?php
-		foreach ($series_arr as $s)
-		{
-		if ($s['series']['active'] == 1)
-		{
-		echo '
-		<div class="series'; if ($s['series']['players'] == 4){ echo ' double'; }else{ echo ' single'; } echo' clearfix" series_id="' . $s['series']['series_id'] . '">';
-			for ($t = 1; $t <= 2; $t++)
+		<section class="component clearfix">
+			<header role="component">
+				<h2>Active Series</h2>
+			</header>
+			<?php
+			foreach ($series_arr as $s)
+			{
+			if ($s['series']['active'] == 1)
 			{
 			echo '
-			<div class="team">
-				<h2>' . $s['team'.$t]['nickname'] . '</h2>
-				<div class="players">';
-					// Doubles Match
-					if ($s['series']['players'] == 4)
-					{
-					echo '
-					<div class="player_img"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
-					<div class="player_img"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
-					}
-					// Singles Match
-					else
-					{
-					echo '
-					<div class="player_img"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
-					}
+			<div class="series clearfix" series_id="' . $s['series']['series_id'] . '">';
+				for ($t = 1; $t <= 2; $t++)
+				{
 				echo '
-				</div>
-				<div class="wins">
-					<em>' . $s['series']['wins_'.$t] . '</em>
-					<span>wins</span>
+				<div class="team" team_num="' . $t . '">
+					<h2>' . $s['team'.$t]['nickname'] . '</h2>
+					<div class="wins">
+						<span>wins</span>
+						<em>' . $s['series']['wins_'.$t] . '</em>
+					</div>
+				</div>';
+				}
+				echo '
+				<div class="log_link">
+					<a href="#" series_id="'.$s["series"]["series_id"].'" num_players="'.$s['series']['players'].'"></a>
 				</div>
 			</div>';
 			}
-			echo '
-			<div class="log_link">
-				<a href="/foosball/series.php?s='.$s["series"]["series_id"].'">View / Update Series</a>
-			</div>
-		</div>';
-		}
-		}
-		?>
-		<header role="component">
-			<h2>Completed Series</h2>
-		</header>
-		<?php
-		foreach ($series_arr as $s)
-		{
-		if ($s['series']['active'] != 1)
-		{
-		echo '
-		<div class="series'; if ($s['series']['players'] == 4){ echo ' double'; }else{ echo ' single'; } echo' clearfix" series_id="' . $s['series']['series_id'] . '">';
-			for ($t = 1; $t <= 2; $t++)
+			}
+			?>
+		</section>
+		<section class="component clearfix">
+			<header role="component">
+				<h2>Completed Series</h2>
+			</header>
+			<?php
+			foreach ($series_arr as $s)
+			{
+			if ($s['series']['active'] != 1)
 			{
 			echo '
-			<div class="team">
-				<h2>' . $s['team'.$t]['nickname'] . '</h2>
-				<div class="players">';
-					// Doubles Match
-					if ($s['series']['players'] == 4)
-					{
-					echo '
-					<div class="player_img"><img src="images/' . $s['team'.$t.'_player1']['image'] . '.jpg" alt="' . $s['team'.$t.'_player1']['nickname'] . '" /></div>
-					<div class="player_img"><img src="images/' . $s['team'.$t.'_player2']['image'] . '.jpg" alt="' . $s['team'.$t.'_player2']['nickname'] . '" /></div>';
-					}
-					// Singles Match
-					else
-					{
-					echo '
-					<div class="player_img"><img src="images/' . $s['team'.$t]['image'] . '.jpg" alt="' . $s['team'.$t]['nickname'] . '" /></div>';
-					}
+			<div class="series clearfix" series_id="' . $s['series']['series_id'] . '">';
+				for ($t = 1; $t <= 2; $t++)
+				{
 				echo '
-				</div>
-				<div class="wins">
-					<em>' . $s['series']['wins_'.$t] . '</em>
-					<span>wins</span>
+				<div class="team">
+					<h2>' . $s['team'.$t]['nickname'] . '</h2>
+					<div class="wins">
+						<em>' . $s['series']['wins_'.$t] . '</em>
+						<span>wins</span>
+					</div>
+				</div>';
+				}
+				echo '
+				<div class="log_link">
+					<a href="#" series_id="'.$s["series"]["series_id"].'" num_players="'.$s['series']['players'].'"></a>
 				</div>
 			</div>';
 			}
-			echo '
-			<div class="log_link">
-				<a href="/foosball/series.php?s='.$s["series"]["series_id"].'">View Series</a>
-			</div>
-		</div>';
-		}
-		}
-		?>
+			}
+			?>
+		</section>
 	</section>
 	<aside id="sidebar">
 		<?php
 		echo '
-		<header role="component">
-			<h2>Recent Results</h2>
-		</header>
-		<section class="series_log">
-			<div class="series_log_head">
-				<div class="winner">Winner</div>
-				<div class="loser">Loser</div>
-				<div class="date">Date</div>
-			</div>';
-			foreach ($series_log_arr as $sl)
-			{
-			echo '
-			<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
-				<div class="winner">' . $sl['winner'] . '</div>
-				<div class="loser">' . $sl['loser'] . '</div>
-				<div class="date">';
-				if (date('Ymd',$sl['date_time']) == date('Ymd'))
-				{
-					$game_date = "Today";
-				}
-				else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
-				{
-					$game_date = "Yesterday";
-				}
-				else
-				{
-					$game_date = date('n/j/Y',$sl['date_time']);
-				}
-				echo $game_date .'
+		<section class="component">
+			<header role="component">
+				<h2>Recent Results</h2>
+			</header>
+			<section class="series_log">
+				<div class="series_log_head">
+					<div class="winner">Winner</div>
+					<div class="loser">Loser</div>
+					<div class="date">Date</div>
 				</div>
-			</div>
-			';
-			}
-		echo '
+				<div class="series_log_data">';
+					foreach ($series_log_arr as $sl)
+					{
+					echo '
+					<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
+						<div class="winner">' . $sl['winner'] . '</div>
+						<div class="loser">' . $sl['loser'] . '</div>
+						<div class="date">';
+						if (date('Ymd',$sl['date_time']) == date('Ymd'))
+						{
+							$game_date = "Today";
+						}
+						else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
+						{
+							$game_date = "Yesterday";
+						}
+						else
+						{
+							$game_date = date('n/j/Y',$sl['date_time']);
+						}
+						echo $game_date .'
+						</div>
+					</div>
+					';
+					}
+				echo '
+				</div>
+			</section>
 		</section>';
 		?>
 		<?php
 		echo '
-		<header role="component">
-			<h2>Players Club</h2>
-		</header>
-		<section class="players">';
-		foreach ($players_arr as $p)
-		{
-			echo '
-			<div class="player_img"><a href="/foosball/player.php?p=' . $p['player_id'] . '"><img src="images/' . $p['image'] . '.jpg" alt="' . $p['nickname'] . '" /></a></div>';
-		}
-		echo '
-		</section>';
-		?>
+		<section class="component">
+			<header role="component">
+				<h2>Players Club</h2>
+			</header>
+			<section class="players clearfix">';
+			foreach ($players_arr as $p)
+			{
+				echo '
+				<a href="#"><img class="player_img" player_id="' . $p['player_id'] . '" src="images/' . $p['image'] . '.jpg" alt="' . $p['nickname'] . '" /></a>';
+			}
+			?>
+			</section>
+			<div class="match_maker btn">make a new match</div>
+		</section>
 	</aside>
 </section>
+<!-- Modal -->
+<div id="modal_mask"></div>
+<div id="modal_window"></div>
 <!-- Scripts -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script src="js/winner.js"></script>
+<script src="js/series_log.js"></script>
+<script src="js/player.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/match_maker.js"></script>
 </body>
 </html>

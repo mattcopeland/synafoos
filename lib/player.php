@@ -1,7 +1,9 @@
 <?php
 /*
- * Get the players
+ * Get a player
  */
+require_once('dbconnect.php');
+$player_id = $_POST['player_id'] ? $_POST['player_id'] : 1;
 $query = "SELECT * FROM players WHERE player_id = $player_id";
 $result = mysql_query($query);
 if ($result)
@@ -62,6 +64,10 @@ if ($result)
 			$player['wins'] = $player['wins'] + $wins['wins_2'];
 			$player['loses'] = $player['loses'] + $wins['wins_1'];
 		}
+
 	}
 }
+$result = json_encode($player, JSON_NUMERIC_CHECK);
+echo $result;
+mysql_close($link);
 ?>

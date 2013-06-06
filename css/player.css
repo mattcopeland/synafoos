@@ -1,9 +1,13 @@
 .player {
 	overflow: hidden;
+	width: 330px;
 }
 .player .player_img {
 	float: left;
 	margin-right: 10px;
+}
+.player .player_img img {
+	border-radius: 4px;
 }
 .player .player_info {
 	float: left;
