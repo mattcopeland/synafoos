@@ -1,10 +1,11 @@
 .player {
 	overflow: hidden;
-	width: 330px;
 }
 .player .player_img {
 	float: left;
-	margin-right: 10px;
+	height: 75px;
+	margin: 0 10px 0 0;
+	width: 75px;
 }
 .player .player_img img {
 	border-radius: 4px;
@@ -12,7 +13,8 @@
 .player .player_info {
 	float: left;
 }
-.player .nickname {
+.player .nickname,
+.player h4 {
 	color: #2a2a2a;
 	font-family: "Nunito", sans-serif;
 	font-size: 1.5em;
@@ -23,17 +25,35 @@
 .player .playername {
 	margin-bottom: 5px;
 }
+.player h4 {
+	font-size: 1.175em;
+}
+.player .wins_singles {
+	clear: left;
+}
 .player .wins_singles,
-.player .wins_doubles {
+.player .wins_doubles,
+.player .rank {
 	float: left;
 	overflow: hidden;
 }
-.player .wins_singles {
+.player .wins_singles,
+.player .wins_doubles {
 	margin-right: 40px;
 }
 .player .wins_singles label,
 .player .wins_doubles label {
 	display: block;
 	float: left;
+	margin-bottom: 0;
 	width: 55px;
+}
+.player .rank div {
+	color: #2a2a2a;
+	font-family: "Nunito", sans-serif;
+	font-size: 2.75em;
+	font-weight: bold;
+	line-height: 1em;
+	text-align: center;
+	text-shadow: 0 1px 0 rgba(255, 197, 21, 1);
 }

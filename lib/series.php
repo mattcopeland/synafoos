@@ -1,4 +1,5 @@
 <?php
+require_once('dbconnect.php');
 $series_arr = array();
 $i = 0;
 if (isset($series_id))
@@ -86,4 +87,64 @@ if ($result) {
 		++$i;
 	}
 }
+// HTML Payload
+echo '
+<h2>Active Series</h2>
+<div class="row">
+	<section id="active_series">';			
+	foreach ($series_arr as $s)
+	{
+		if ($s['series']['active'] == 1)
+		{
+		echo '
+		<div class="span4">
+			<div class="series" series_id="' . $s['series']['series_id'] . '" num_players="'.$s['series']['players'].'">';
+				for ($t = 1; $t <= 2; $t++)
+				{
+				echo '
+				<div class="team" team_num="' . $t . '">
+					<h2>' . $s['team'.$t]['nickname'] . '</h2>
+					<div class="wins">
+						<span>wins</span>
+						<em>' . $s['series']['wins_'.$t] . '</em>
+					</div>
+				</div>';
+				}
+			echo '
+			</div>
+		</div>';
+		}
+	}
+	echo '
+	</section>
+</div>
+<h2>Completes Series</h2>
+<div class="row">
+	<section id="completed_series">';			
+	foreach ($series_arr as $s)
+	{
+		if ($s['series']['active'] != 1)
+		{
+		echo '
+		<div class="span4">
+			<div class="series" series_id="' . $s['series']['series_id'] . '" num_players="'.$s['series']['players'].'">';
+				for ($t = 1; $t <= 2; $t++)
+				{
+				echo '
+				<div class="team" team_num="' . $t . '">
+					<h2>' . $s['team'.$t]['nickname'] . '</h2>
+					<div class="wins">
+						<span>wins</span>
+						<em>' . $s['series']['wins_'.$t] . '</em>
+					</div>
+				</div>';
+				}
+			echo '
+			</div>
+		</div>';
+		}
+	}
+	echo '
+	</section>
+</div>';
 ?>

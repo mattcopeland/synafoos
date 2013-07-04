@@ -3,7 +3,8 @@
  * Get a player
  */
 require_once('dbconnect.php');
-$player_id = $_POST['player_id'] ? $_POST['player_id'] : 1;
+$player_id = $_GET['player_id'] ? $_GET['player_id'] : 1;
+$type = $_GET['type'] ? $_GET['type'] : 'HTML';
 $query = "SELECT * FROM players WHERE player_id = $player_id";
 $result = mysql_query($query);
 if ($result)
@@ -67,7 +68,44 @@ if ($result)
 
 	}
 }
-$result = json_encode($player, JSON_NUMERIC_CHECK);
-echo $result;
+$query = "SELECT rank,points FROM rankings WHERE player_id = $player_id";
+$result = mysql_query($query);
+if($result)
+{
+	$ranking = mysql_fetch_assoc($result);
+	$player['rank'] = $ranking['rank'];
+}
 mysql_close($link);
+
+// Return JSON encoded data
+if ($type == 'JSON') {
+	$result = json_encode($player, JSON_NUMERIC_CHECK);
+	echo $result;
+}
+//Retrun HTML data
+else {
+//HTML Payload
+echo '
+<section class="player">
+	<img class="player_img" src="img/players/' . $player['image'] . '.jpg" alt="' . $player['nickname'] . '" />
+	<div class="player_info">
+		<div class="nickname">' . $player['nickname'] . '</div>
+		<div class="playername">a.k.a. ' . $player['first_name'] . ' ' . $player['last_name'] . '</div>
+	</div>
+	<div class="wins_singles">
+		<h4>Singles</h4>
+		<div class="wins"><label>Wins:</label>' . $player['wins'] . '</div>
+		<div class="loses"><label>Loses:</label>' . $player['loses'] . '</div>
+	</div>
+	<div class="wins_doubles">
+		<h4>Doubles</h4>
+		<div class="wins"><label>Wins:</label>' . $player['wins_dbl'] . '</div>
+		<div class="loses"><label>Loses:</label>' . $player['loses_dbl'] . '</div>
+	</div>
+	<div class="rank">
+		<h4>Rank</h4>
+		<div>' . $player['rank'] . '</div>
+	</div>
+</section>';
+}
 ?>

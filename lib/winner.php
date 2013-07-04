@@ -4,11 +4,11 @@
  *
  */
 require_once('dbconnect.php');
-$series_id = $_POST['series_id'];
-$winning_team = $_POST['winning_team'];
+$series_id = $_GET['series_id'];
+$winning_team = $_GET['winning_team'];
 $losing_team = ($winning_team == 1 ? 2 : 1);
 $time = time();
-$action = $_POST['action'];
+$action = $_GET['action'];
 if ($action == 'plus') {
 	$query = "UPDATE series SET wins_$winning_team = wins_$winning_team + 1, last_updated = $time WHERE series_id = $series_id";
 }
@@ -112,6 +112,7 @@ $result = mysql_query($query);
 $wins = mysql_fetch_assoc($result);
 $log['wins'] = $wins['wins_'.$winning_team];
 $result = json_encode($log, JSON_NUMERIC_CHECK);
-echo $result;
 mysql_close($link);
+
+echo $result;
 ?>

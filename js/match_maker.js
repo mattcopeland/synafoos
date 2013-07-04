@@ -2,7 +2,7 @@ var synafoos = synafoos || {};
 
 synafoos.matchMaker = {
 	init: function() {
-		$('#modal_window').on('click','#set_match', function (e) {
+		$('#match-maker-modal-window').on('click','#set_match', function (e) {
 			synafoos.matchMaker.setMatch();
 		});
 		$('.match_maker').click(function() {
@@ -44,9 +44,9 @@ synafoos.matchMaker = {
 			else if ($(this).children('.mm_team_players').children().size() == 1)
 			{
 				var player_id = $(this).children('.mm_team_players').children('img').attr('player_id');
-				dataString = 'player_id='+player_id;
+				dataString = 'player_id='+player_id+'&type=JSON';
 				$.ajax({
-					type: "POST",
+					type: "GET",
 					url: "lib/player.php",
 					data: dataString,
 					success: function(data) {
@@ -61,7 +61,7 @@ synafoos.matchMaker = {
 				var player_2 = $(this).children('.mm_team_players').children('img:eq(1)').attr('player_id');
 				dataString = 'player_1='+player_1+'&player_2='+player_2;
 				$.ajax({
-					type: "POST",
+					type: "GET",
 					url: "lib/team.php",
 					data: dataString,
 					success: function(data) {
@@ -130,11 +130,19 @@ synafoos.matchMaker = {
 			if (team_1_name != "" && team_2_name != "")
 			{ 
 				$.ajax({
-					type: "POST",
-					url: "lib/match_maker.php",
+					type: "GET",
+					url: "lib/make_match.php",
 					data: dataString,
 					success: function(data){
-						location.reload();
+						// Update the number of wins in the main area
+						$.ajax({
+							type: "GET",
+							url: "lib/series.php",
+							success: function(data) {
+								$('#series').html(data);
+								$('#match-maker-modal-window').modal('hide');
+							}
+						});
 					}
 				});
 			}
@@ -153,12 +161,13 @@ synafoos.matchMaker = {
 		return false;
 	},
 	getMatchMaker: function(self) {
-		$.ajax({
-			type: "POST",
-			url: "match_maker.php",
-			success: function(data){
-				synafoos.modal.showModal(self,data);
-			}
+		// Remove data from previous modal
+		$('body').on('hidden', '.modal', function () {
+			$(this).removeData('modal').children('.modal-body').html('<img src="img/loader.gif" alt="loading..." />');
+		});
+		// Load new data into modal
+		$('#match-maker-modal-window').modal({
+			remote: '/lib/match_maker.php'
 		});
 	}
 };

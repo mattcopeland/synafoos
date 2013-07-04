@@ -2,6 +2,8 @@
 /*
  * Get the logs of a 10 most recent series matches
  */
+date_default_timezone_set('America/New_York');
+require_once('dbconnect.php');
 $series_log_arr = array();
 $i = 0;
 
@@ -45,4 +47,40 @@ if ($result) {
 		++$i;
 	}
 }
+// HTML Payload
+echo '
+<h2>Recent Results</h2>
+<section class="series_log">
+	<div class="series_log_head">
+		<div class="winner">Winner</div>
+		<div class="loser">Loser</div>
+		<div class="date">Date</div>
+	</div>
+	<div class="series_log_data">';
+		foreach ($series_log_arr as $sl)
+		{
+		echo '
+		<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
+			<div class="winner">' . $sl['winner'] . '</div>
+			<div class="loser">' . $sl['loser'] . '</div>
+			<div class="date">';
+			if (date('Ymd',$sl['date_time']) == date('Ymd'))
+			{
+				$game_date = "Today";
+			}
+			else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
+			{
+				$game_date = "Yesterday";
+			}
+			else
+			{
+				$game_date = date('n/j/Y',$sl['date_time']);
+			}
+			echo $game_date .'</div>
+		</div>
+		';
+		}
+	echo '
+	</div>
+</section>';
 ?>
