@@ -1,4 +1,4 @@
 synafoos
 ========
 
-Synacor Foosball
+Synacor Foosball!
