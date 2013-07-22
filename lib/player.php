@@ -2,80 +2,69 @@
 /*
  * Get a player
  */
-require_once('dbconnect.php');
+require_once('pdoconnect.php');
+
 $player_id = $_GET['player_id'] ? $_GET['player_id'] : 1;
 $type = $_GET['type'] ? $_GET['type'] : 'HTML';
-$query = "SELECT * FROM players WHERE player_id = $player_id";
-$result = mysql_query($query);
-if ($result)
-{
-	$player = mysql_fetch_assoc($result);
-	$player['wins'] = 0;
-	$player['loses'] = 0;
-	$player['wins_dbl'] = 0;
-	$player['loses_dbl'] = 0;
-	// Get the teams this player is a part of
-	$query = "SELECT team_id FROM teams WHERE player_1 = $player_id OR player_2 = $player_id";
-	$result = mysql_query($query);
-	if($result)
-	{
-		while($teams = mysql_fetch_assoc($result))
-		{
-			// Wins where this player is on team 1
-			$query = "SELECT wins_1,wins_2 FROM series WHERE team_1 = $teams[team_id] AND players = 4";
-			$result2 = mysql_query($query);
-			if($result2)
-			{
-				while($wins = mysql_fetch_assoc($result2))
-				{
-					$player['wins_dbl'] = $player['wins_dbl'] + $wins['wins_1'];
-					$player['loses_dbl'] = $player['loses_dbl'] + $wins['wins_2'];
-				}
-			}
-			// Wins where this player is on team 2
-			$query = "SELECT wins_1,wins_2 FROM series WHERE team_2 = $teams[team_id] AND players = 4";
-			$result2 = mysql_query($query);
-			if($result2)
-			{
-				while($wins = mysql_fetch_assoc($result2))
-				{
-					$player['wins_dbl'] = $player['wins_dbl'] + $wins['wins_2'];
-					$player['loses_dbl'] = $player['loses_dbl'] + $wins['wins_1'];
-				}
-			}
-		}
-	}
-	// Get individual wins
-	$query = "SELECT wins_1,wins_2 FROM series WHERE team_1 = $player_id AND players = 2";
-	$result = mysql_query($query);
-	if($result)
-	{
-		while($wins = mysql_fetch_assoc($result))
-		{
-			$player['wins'] = $player['wins'] + $wins['wins_1'];
-			$player['loses'] = $player['loses'] + $wins['wins_2'];
-		}
-	}
-	$query = "SELECT wins_1,wins_2 FROM series WHERE team_2 = $player_id AND players = 2";
-	$result = mysql_query($query);
-	if($result)
-	{
-		while($wins = mysql_fetch_assoc($result))
-		{
-			$player['wins'] = $player['wins'] + $wins['wins_2'];
-			$player['loses'] = $player['loses'] + $wins['wins_1'];
-		}
 
+// Get the personal data for this player
+$stmt = $conn->prepare('SELECT * FROM players WHERE player_id = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+
+$player = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Initialize this players wins
+$player['wins'] = 0;
+$player['losses'] = 0;
+$player['wins_dbl'] = 0;
+$player['losses_dbl'] = 0;
+
+// Get the (2 player) teams this player is a part of
+$stmt = $conn->prepare('SELECT team_id FROM teams WHERE player_1 = :player_id OR player_2 = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+
+while($teams = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	// Get wins (and losses) where this player is on team 1
+	$stmt2 = $conn->prepare('SELECT wins_1,wins_2 FROM series WHERE team_1 = :team_id AND players = 4');
+	$stmt2->execute(array('team_id' => $teams['team_id']));
+
+	while($wins = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+		$player['wins_dbl'] = $player['wins_dbl'] + $wins['wins_1'];
+		$player['losses_dbl'] = $player['losses_dbl'] + $wins['wins_2'];
+	}
+	// Get wins (and losses) where this player is on team 2
+	$stmt2 = $conn->prepare('SELECT wins_1,wins_2 FROM series WHERE team_2 = :team_id AND players = 4');
+	$stmt2->execute(array('team_id' => $teams['team_id']));
+
+	while($wins = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+		$player['wins_dbl'] = $player['wins_dbl'] + $wins['wins_2'];
+		$player['losses_dbl'] = $player['losses_dbl'] + $wins['wins_1'];
 	}
 }
-$query = "SELECT rank,points FROM rankings WHERE player_id = $player_id";
-$result = mysql_query($query);
-if($result)
-{
-	$ranking = mysql_fetch_assoc($result);
-	$player['rank'] = $ranking['rank'];
+
+// Get individual wins
+// This player is player 2
+$stmt = $conn->prepare('SELECT wins_1,wins_2 FROM series WHERE team_1 = :player_id AND players = 2');
+$stmt->execute(array('player_id' => $player_id));
+
+while($wins = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	$player['wins'] = $player['wins'] + $wins['wins_1'];
+	$player['losses'] = $player['losses'] + $wins['wins_2'];
 }
-mysql_close($link);
+// This player is player 2
+$stmt = $conn->prepare('SELECT wins_1,wins_2 FROM series WHERE team_2 = :player_id AND players = 2');
+$stmt->execute(array('player_id' => $player_id));
+
+while($wins = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	$player['wins'] = $player['wins'] + $wins['wins_2'];
+	$player['losses'] = $player['losses'] + $wins['wins_1'];
+}
+
+// Get this player's ranking
+$stmt = $conn->prepare('SELECT rank,points FROM rankings WHERE player_id = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+$ranking = $stmt->fetch(PDO::FETCH_ASSOC);
+$player['rank'] = $ranking['rank'];
 
 // Return JSON encoded data
 if ($type == 'JSON') {
@@ -95,12 +84,12 @@ echo '
 	<div class="wins_singles">
 		<h4>Singles</h4>
 		<div class="wins"><label>Wins:</label>' . $player['wins'] . '</div>
-		<div class="loses"><label>Loses:</label>' . $player['loses'] . '</div>
+		<div class="losses"><label>Losses:</label>' . $player['losses'] . '</div>
 	</div>
 	<div class="wins_doubles">
 		<h4>Doubles</h4>
 		<div class="wins"><label>Wins:</label>' . $player['wins_dbl'] . '</div>
-		<div class="loses"><label>Loses:</label>' . $player['loses_dbl'] . '</div>
+		<div class="losses"><label>Losses:</label>' . $player['losses_dbl'] . '</div>
 	</div>
 	<div class="rank">
 		<h4>Rank</h4>

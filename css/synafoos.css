@@ -161,6 +161,7 @@ h2 {
 /* Series Details
 ---------------------------------*/
 .series_details {
+	cursor: default;
 	margin-bottom: 10px;
 	overflow: hidden;
 }

@@ -3,7 +3,7 @@
  * Get the logs of a particular series
  */
 date_default_timezone_set('UTC');
-require_once('dbconnect.php');
+require_once('pdoconnect.php');
 $series_id = $_GET['series_id'] ? $_GET['series_id'] : 1;
 $num_players = $_GET['num_players'] ? $_GET['num_players'] : 2;
 $series_log_arr = array();
@@ -20,87 +20,94 @@ else
 	$table = "players";
 	$field = "player_id";	
 }
+$stmt = $conn->prepare('SELECT players,team_1,team_2,wins_1,wins_2,active FROM series WHERE series_id = :series_id LIMIT 1');
+$stmt->execute(array('series_id' => $series_id));
+$series_details = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$query = "SELECT players,team_1,team_2,wins_1,wins_2,active FROM series WHERE series_id = $series_id LIMIT 1";
-$result = mysql_query($query);
-if ($result) {
-	$series_details = mysql_fetch_assoc($result);
-	// Doubles Match
-	if ($series_details["players"] == 4)
-	{
-		// Get the team names
-		$query = "SELECT nickname FROM $table WHERE $field = $series_details[team_1]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_1 = mysql_fetch_assoc($result2);
-			$series_details["team_1_details"]["nickname"] = $team_1["nickname"];
-		}
-		$query = "SELECT nickname FROM $table WHERE $field = $series_details[team_2]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_2 = mysql_fetch_assoc($result2);
-			$series_details["team_2_details"]["nickname"] = $team_2["nickname"];
-		}
-		// Get the nicknames and images for the players on team 1
-		$query = "SELECT player_1,player_2 FROM $table WHERE $field = $series_details[team_1]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_1_players = mysql_fetch_assoc($result2);
-			$query = "SELECT nickname,image FROM players WHERE player_id = $team_1_players[player_1]";
-			$result3 = mysql_query($query);
-			if ($result3) {
-				$team_1_player_1 = mysql_fetch_assoc($result3);
-				$series_details["team_1_details"]["player_1"] = $team_1_player_1;
-			}
-			$query = "SELECT nickname,image FROM players WHERE player_id = $team_1_players[player_2]";
-			$result3 = mysql_query($query);
-			if ($result3) {
-				$team_1_player_2 = mysql_fetch_assoc($result3);
-				$series_details["team_1_details"]["player_2"] = $team_1_player_2;
-			}
-		}
-		// Get the nicknames and images for the players on team 2
-		$query = "SELECT player_1,player_2 FROM $table WHERE $field = $series_details[team_2]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_2_players = mysql_fetch_assoc($result2);
-			$query = "SELECT nickname,image FROM players WHERE player_id = $team_2_players[player_1]";
-			$result3 = mysql_query($query);
-			if ($result3) {
-				$team_2_player_1 = mysql_fetch_assoc($result3);
-				$series_details["team_2_details"]["player_1"] = $team_2_player_1;
-			}
-			$query = "SELECT nickname,image FROM players WHERE player_id = $team_2_players[player_2]";
-			$result3 = mysql_query($query);
-			if ($result3) {
-				$team_2_player_2 = mysql_fetch_assoc($result3);
-				$series_details["team_2_details"]["player_2"] = $team_2_player_2;
-			}
-		}
-	}
-	// Singles Match
-	else
-	{
-		// Get the team names
-		$query = "SELECT nickname,image FROM $table WHERE $field = $series_details[team_1]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_1 = mysql_fetch_assoc($result2);
-			$series_details["team_1_details"]["nickname"] = $team_1["nickname"];
-			$series_details["team_1_details"]["player_1"]["nickname"] = $team_1["nickname"];
-			$series_details["team_1_details"]["player_1"]["image"] = $team_1["image"];
-		}
-		$query = "SELECT nickname,image FROM $table WHERE $field = $series_details[team_2]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$team_2 = mysql_fetch_assoc($result2);
-			$series_details["team_2_details"]["nickname"] = $team_2["nickname"];
-			$series_details["team_2_details"]["player_1"]["nickname"] = $team_2["nickname"];
-			$series_details["team_2_details"]["player_1"]["image"] = $team_2["image"];
-		}
-	}
+// Doubles Match
+if ($series_details["players"] == 4) {
+	// Get the team names
+	// Team 1
+	$stmt = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :team_1');
+	$stmt->execute(array(
+		'team_1' => $series_details['team_1']
+	));
+	$team_1_nickname = $stmt->fetchColumn();
+	$series_details['team_1_details']['nickname'] = $team_1_nickname;
+	
+	// Team 2
+	$stmt = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :team_2');
+	$stmt->execute(array(
+		'team_2' => $series_details['team_2']
+	));
+	$team_2_nickname = $stmt->fetchColumn();
+	$series_details['team_2_details']['nickname'] = $team_2_nickname;
+	
+	// Get the nicknames and images for the players on team 1
+	$stmt = $conn->prepare('SELECT player_1,player_2 FROM '.$table.' WHERE '.$field.' = :team_1');
+	$stmt->execute(array(
+		'team_1' => $series_details['team_1']
+	));
+	$team_1_players = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	$stmt = $conn->prepare('SELECT nickname,image FROM players WHERE player_id = :player_1');
+	$stmt->execute(array(
+		'player_1' => $team_1_players['player_1']
+	));
+	$team_1_player_1 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_1_details"]["player_1"] = $team_1_player_1;
+
+	$stmt = $conn->prepare('SELECT nickname,image FROM players WHERE player_id = :player_2');
+	$stmt->execute(array(
+		'player_2' => $team_1_players['player_2']
+	));
+	$team_1_player_2 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_1_details"]["player_2"] = $team_1_player_2;
+
+	// Get the nicknames and images for the players on team 2
+	$stmt = $conn->prepare('SELECT player_1,player_2 FROM '.$table.' WHERE '.$field.' = :team_2');
+	$stmt->execute(array(
+		'team_2' => $series_details['team_2']
+	));
+	$team_2_players = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	$stmt = $conn->prepare('SELECT nickname,image FROM players WHERE player_id = :player_1');
+	$stmt->execute(array(
+		'player_1' => $team_2_players['player_1']
+	));
+	$team_2_player_1 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_2_details"]["player_1"] = $team_2_player_1;
+
+	$stmt = $conn->prepare('SELECT nickname,image FROM players WHERE player_id = :player_2');
+	$stmt->execute(array(
+		'player_2' => $team_2_players['player_2']
+	));
+	$team_2_player_2 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_2_details"]["player_2"] = $team_2_player_2;
 }
-
+// Singles Match
+else {
+	// Get the team names
+	// Player 1
+	$stmt = $conn->prepare('SELECT nickname,image FROM '.$table.' WHERE '.$field.' = :team_1');
+	$stmt->execute(array(
+		'team_1' => $series_details['team_1']
+	));
+	$team_1 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_1_details"]["nickname"] = $team_1["nickname"];
+	$series_details["team_1_details"]["player_1"]["nickname"] = $team_1["nickname"];
+	$series_details["team_1_details"]["player_1"]["image"] = $team_1["image"];
+	// Player 2
+	$stmt = $conn->prepare('SELECT nickname,image FROM '.$table.' WHERE '.$field.' = :team_2');
+	$stmt->execute(array(
+		'team_2' => $series_details['team_2']
+	));
+	$team_2 = $stmt->fetch(PDO::FETCH_ASSOC);
+	$series_details["team_2_details"]["nickname"] = $team_2["nickname"];
+	$series_details["team_2_details"]["player_1"]["nickname"] = $team_2["nickname"];
+	$series_details["team_2_details"]["player_1"]["image"] = $team_2["image"];
+}
+// HTML Payload
 $html_payload = '<section series_id="' . $series_id . '" class="series_details';
 if ($series_details["players"] == 4) {
 	$html_payload .= ' double';
@@ -135,35 +142,36 @@ if ($series_details["active"] == 1) {
 
 $html_payload .= '</div></div></section>';
 
-
 // Get the log for this series
-$query = "SELECT * FROM series_log WHERE series_id = $series_id ORDER BY log_id DESC";
-$result = mysql_query($query);
-if ($result) {
-	while($series_log = mysql_fetch_assoc($result))
-	{
-		$query = "SELECT nickname FROM $table WHERE $field = $series_log[winner_id]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$winner = mysql_fetch_assoc($result2);
-		}
-		$query = "SELECT nickname FROM $table WHERE $field = $series_log[loser_id]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$loser = mysql_fetch_assoc($result2);
-		}
-		// Add some things to the series log
-		$series_log["game_date"] = date("n/j/Y",$series_log["date_time"]);
-		$series_log["winner"] = $winner["nickname"];
-		$series_log["loser"] = $loser["nickname"];
+$stmt = $conn->prepare('SELECT * FROM series_log WHERE series_id = :series_id ORDER BY log_id DESC');
+$stmt->execute(array(
+	'series_id' => $series_id
+));
+while($series_log = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	// Get the winner's nickname
+	$stmt2 = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :winner_id');
+	$stmt2->execute(array(
+		'winner_id' => $series_log['winner_id']
+	));
+	$winner_nickname = $stmt2->fetchColumn();
+	// Get the loser's nickname
+	$stmt2 = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :loser_id');
+	$stmt2->execute(array(
+		'loser_id' => $series_log['loser_id']
+	));
+	$loser_nickname = $stmt2->fetchColumn();
+	// Add some things to the series log
+	$series_log["game_date"] = date("n/j/Y",$series_log["date_time"]);
+	$series_log["winner"] = $winner_nickname;
+	$series_log["loser"] = $loser_nickname;
 
-		$series_log_arr[$i] = array(
-			"series_log" => $series_log,
-		);
-		++$i;
-	}
+	$series_log_arr[$i] = array(
+		"series_log" => $series_log,
+	);
+	++$i;
 }
 
+// HTML Payload
 $html_payload .= '<section class="series_log series_log_modal"><div class="series_log_head"><div class="winner">Winner</div><div class="date">Date</div></div><div class="series_log_data">';
 
 foreach ($series_log_arr as $series) {
@@ -177,5 +185,4 @@ foreach ($series_log_arr as $series) {
 $html_payload .= '</div></section>';
 
 echo $html_payload;
-mysql_close($link);
 ?>

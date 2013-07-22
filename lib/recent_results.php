@@ -3,50 +3,45 @@
  * Get the logs of a 10 most recent series matches
  */
 date_default_timezone_set('America/New_York');
-require_once('dbconnect.php');
+require_once('pdoconnect.php');
+
 $series_log_arr = array();
 $i = 0;
 
-$query = "SELECT series.series_id,series.players,series.team_1,series.team_2,series_log.winner_id,series_log.loser_id,series_log.date_time
-		  FROM series
-		  LEFT JOIN series_log
-		  ON series.series_id = series_log.series_id
-		  WHERE series_log.rescinded != 1
-		  ORDER BY series_log.log_id
-		  DESC LIMIT 10";
-	 
-$result = mysql_query($query);
-if ($result) {
-	while($series_log = mysql_fetch_assoc($result))
-	{	
-		// Doubles Match
-		if ($series_log['players'] == 4)
-		{
-			$table = "teams";
-			$field = "team_id";
-		}
-		// Singles Match
-		else
-		{
-			$table = "players";
-			$field = "player_id";
-		}
-		$query = "SELECT nickname FROM $table WHERE $field = $series_log[winner_id]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$winner = mysql_fetch_assoc($result2);
-			$series_log["winner"] = $winner["nickname"];
-		}
-		$query = "SELECT nickname FROM $table WHERE $field = $series_log[loser_id]";
-		$result2 = mysql_query($query);
-		if ($result2) {
-			$loser = mysql_fetch_assoc($result2);
-			$series_log["loser"] = $loser["nickname"];
-		}
-		$series_log_arr[$i] = $series_log;
-		++$i;
+$stmt = $conn->prepare('SELECT series.series_id,series.players,series.team_1,series.team_2,series_log.winner_id,series_log.loser_id,series_log.date_time
+		FROM series
+		LEFT JOIN series_log
+		ON series.series_id = series_log.series_id
+		WHERE series_log.rescinded != 1
+		ORDER BY series_log.log_id
+		DESC LIMIT 10');
+$stmt->execute();
+while($series_log = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	// Doubles Match
+	if ($series_log['players'] == 4) {
+		$table = "teams";
+		$field = "team_id";
 	}
+	// Singles Match
+	else {
+		$table = "players";
+		$field = "player_id";
+	}
+	// Get the winners nickname
+	$stmt2 = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :winner_id');
+	$stmt2->execute(array('winner_id' => $series_log['winner_id']));
+	$winner = $stmt2->fetchColumn();
+	$series_log["winner"] = $winner;
+	// Get the losers nickname
+	$stmt2 = $conn->prepare('SELECT nickname FROM '.$table.' WHERE '.$field.' = :loser_id');
+	$stmt2->execute(array('loser_id' => $series_log['loser_id']));
+	$loser = $stmt2->fetchColumn();
+	$series_log["loser"] = $loser;
+
+	$series_log_arr[$i] = $series_log;
+	++$i;
 }
+
 // HTML Payload
 echo '
 <h2>Recent Results</h2>
