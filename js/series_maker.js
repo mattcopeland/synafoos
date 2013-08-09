@@ -1,12 +1,12 @@
 var synafoos = synafoos || {};
 
-synafoos.matchMaker = {
+synafoos.seriesMaker = {
 	init: function() {
-		$('#match-maker-modal-window').on('click','#set_match', function (e) {
-			synafoos.matchMaker.setMatch();
+		$('#series-maker-modal-window').on('click','#set_series', function (e) {
+			synafoos.seriesMaker.setSeries();
 		});
-		$('.match_maker').click(function() {
-			synafoos.matchMaker.getMatchMaker(this);
+		$('.series_maker').click(function() {
+			synafoos.seriesMaker.getSeriesMaker(this);
 		});
 	},
 	dragPlayer: function(player, event) {
@@ -19,10 +19,10 @@ synafoos.matchMaker = {
 		// move the first one added back to the pool
 		if ($(target).children().size() > 1)
 		{
-			synafoos.matchMaker.pushInPool($(target).children('img:eq(0)'));
+			synafoos.seriesMaker.pushInPool($(target).children('img:eq(0)'));
 		}
 		target.appendChild(document.getElementById(player));
-		synafoos.matchMaker.updateTeamNames();
+		synafoos.seriesMaker.updateTeamNames();
 		return false;
 	},
 	pushInPool: function(player) {
@@ -32,7 +32,7 @@ synafoos.matchMaker = {
 		event.preventDefault();
 		var player = event.dataTransfer.getData('Player');
 		target.appendChild(document.getElementById(player));
-		synafoos.matchMaker.updateTeamNames();
+		synafoos.seriesMaker.updateTeamNames();
 	},
 	updateTeamNames: function() {
 		$('#mm_matchup .mm_team').each(function() {
@@ -81,7 +81,7 @@ synafoos.matchMaker = {
 			}
 		});
 	},
-	setMatch: function() {
+	setSeries: function() {
 		var team_1_size = $('#mm_team_1 .mm_team_players').children().size();
 		var team_2_size = $('#mm_team_2 .mm_team_players').children().size();
 		$('.mm_team').removeClass('error').removeClass('error_1').removeClass('error_2').removeClass('error_name');
@@ -131,7 +131,7 @@ synafoos.matchMaker = {
 			{ 
 				$.ajax({
 					type: "GET",
-					url: "lib/make_match.php",
+					url: "lib/make_series.php",
 					data: dataString,
 					success: function(data){
 						// Update the number of wins in the main area
@@ -140,7 +140,7 @@ synafoos.matchMaker = {
 							url: "lib/series.php",
 							success: function(data) {
 								$('#series').html(data);
-								$('#match-maker-modal-window').modal('hide');
+								$('#series-maker-modal-window').modal('hide');
 							}
 						});
 					}
@@ -160,16 +160,16 @@ synafoos.matchMaker = {
 		}
 		return false;
 	},
-	getMatchMaker: function(self) {
+	getSeriesMaker: function(self) {
 		// Remove data from previous modal
 		$('body').on('hidden', '.modal', function () {
 			$(this).removeData('modal').children('.modal-body').html('<img src="img/loader.gif" alt="loading..." />');
 		});
 		// Load new data into modal
-		$('#match-maker-modal-window').modal({
-			remote: '/lib/match_maker.php'
+		$('#series-maker-modal-window').modal({
+			remote: '/lib/series_maker.php'
 		});
 	}
 };
 
-synafoos.matchMaker.init();
+synafoos.seriesMaker.init();

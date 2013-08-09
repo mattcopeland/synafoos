@@ -172,14 +172,14 @@ while($series_log = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // HTML Payload
-$html_payload .= '<section class="series_log series_log_modal"><div class="series_log_head"><div class="winner">Winner</div><div class="date">Date</div></div><div class="series_log_data">';
+$html_payload .= '<section class="series_log series_log_modal"><div class="series_log_head"><div class="winner">Winner</div></div><div class="series_log_data">';
 
 foreach ($series_log_arr as $series) {
 	$rescinded = "";
 	if ($series["series_log"]["rescinded"] == 1) {
 		$rescinded = " rescinded";
 	}
-	$html_payload .= '<div class="series_log_match' . $rescinded . '" log_id="' . $series["series_log"]["log_id"] . '"><div class="winner">' . $series["series_log"]["winner"] . '</div><div class="date">' . $series["series_log"]["game_date"] . '</div></div>';
+	$html_payload .= '<div class="series_log_match' . $rescinded . '" log_id="' . $series["series_log"]["log_id"] . '"><div class="winner">' . $series["series_log"]["winner"] . '</div></div>';
 }
 
 $html_payload .= '</div></section>';

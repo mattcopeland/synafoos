@@ -1,6 +1,6 @@
 var synafoos = synafoos || {};
 
-synafoos.winner = {
+synafoos.seriesResult = {
 	init: function() {
 		var self = this;
 		$('#modal-window').on('click','.team .wins b', function (e) {
@@ -18,7 +18,7 @@ synafoos.winner = {
 		// Update wins total for this team
 		$.ajax({
 			type: "GET",
-			url: "lib/winner.php",
+			url: "lib/log_series_result.php",
 			data: data_string,
 			success: function(data) {
 				data = jQuery.parseJSON(data);
@@ -35,16 +35,16 @@ synafoos.winner = {
 				// Update the recent results
 				$.ajax({
 					type: "GET",
-					url: "lib/recent_results.php",
+					url: "lib/recent_series_results.php",
 					success: function(data) {
-						$('#recent_results').html(data);
+						$('#recent_series_results').html(data);
 					}
 				});
 				if (action == "plus") {
-					synafoos.winner.logWin(data);
+					synafoos.seriesResult.logWin(data);
 				}
 				else {
-					synafoos.winner.rescindWin(data);
+					synafoos.seriesResult.rescindWin(data);
 				}
 			}
 		});
@@ -52,11 +52,11 @@ synafoos.winner = {
 	},
 	logWin: function(data) {
 		// Update Modal log
-		$('.series_log_modal .series_log_data').prepend('<div class="series_log_match" log_id="'+data.log_id+'"><div class="winner">'+data.winner+'</div><div class="date">'+data.date+'</div></div>');
+		$('.series_log_modal .series_log_data').prepend('<div class="series_log_match" log_id="'+data.log_id+'"><div class="winner">'+data.winner+'</div></div>');
 	},
 	rescindWin: function(data) {
 		$('.series_log_match[log_id='+data.log_id+']').addClass('rescinded');
 	}
 }
 
-synafoos.winner.init();
+synafoos.seriesResult.init();

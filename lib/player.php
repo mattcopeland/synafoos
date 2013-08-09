@@ -19,7 +19,7 @@ $player['losses'] = 0;
 $player['wins_dbl'] = 0;
 $player['losses_dbl'] = 0;
 
-// Get the (2 player) teams this player is a part of
+// Get the (2 player) teams of a series this player is a part of
 $stmt = $conn->prepare('SELECT team_id FROM teams WHERE player_1 = :player_id OR player_2 = :player_id');
 $stmt->execute(array('player_id' => $player_id));
 
@@ -41,8 +41,24 @@ while($teams = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		$player['losses_dbl'] = $player['losses_dbl'] + $wins['wins_1'];
 	}
 }
+// Get the match wins where this player is on a 2 person team
+$stmt = $conn->prepare('SELECT * FROM match_log WHERE team_1_player_1 = :player_id OR team_1_player_2 = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+while($matches = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	if ($matches['team_1_player_2'] != NULL) {
+		$player['wins_dbl'] += 1;
+	}
+}
+// Get the match loses where this player is on a 2 person team
+$stmt = $conn->prepare('SELECT * FROM match_log WHERE team_2_player_1 = :player_id OR team_2_player_2 = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+while($matches = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	if ($matches['team_2_player_2'] != NULL) {
+		$player['losses_dbl'] += 1;
+	}
+}
 
-// Get individual wins
+// Get individual wins (and losses) from series
 // This player is player 2
 $stmt = $conn->prepare('SELECT wins_1,wins_2 FROM series WHERE team_1 = :player_id AND players = 2');
 $stmt->execute(array('player_id' => $player_id));
@@ -58,6 +74,24 @@ $stmt->execute(array('player_id' => $player_id));
 while($wins = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$player['wins'] = $player['wins'] + $wins['wins_2'];
 	$player['losses'] = $player['losses'] + $wins['wins_1'];
+}
+
+// Get individual wins from matches
+$stmt = $conn->prepare('SELECT * FROM match_log WHERE team_1_player_1 = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+while($matches = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	if ($matches['team_1_player_2'] == NULL) {
+		$player['wins'] += 1;
+	}
+}
+
+// Get individual losses from matches
+$stmt = $conn->prepare('SELECT * FROM match_log WHERE team_2_player_1 = :player_id');
+$stmt->execute(array('player_id' => $player_id));
+while($matches = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	if ($matches['team_2_player_2'] == NULL) {
+		$player['losses'] += 1;
+	}
 }
 
 // Get this player's ranking

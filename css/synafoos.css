@@ -58,6 +58,17 @@ h2 {
 		margin-left: 0;
 	}
 }
+/* Nav
+---------------------------------*/
+.navbar .nav {
+	float: right;
+	margin: 0;
+}
+.navbar .nav > li > a,
+.navbar .nav > li > a:hover {
+	color: #fff;
+	text-shadow: none;
+}
 /* Series
 ---------------------------------*/
 .series,
@@ -192,12 +203,6 @@ h2 {
 	padding: 5px 0;
 	overflow: hidden;
 }
-@media (max-width: 979px) {
-	.series_log .series_log_head div:nth-child(3),
-	.series_log .series_log_match div:nth-child(3) {
-		display: none;
-	}
-}
 .series_log .series_log_head {
 	background: #e6e6e6;
 	box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, .5);
@@ -207,28 +212,15 @@ h2 {
 	text-decoration: line-through;
 }
 .series_log .winner,
-.series_log .loser,
-.series_log .date {
+.series_log .loser {
 	float: left;
 	text-align: center;
-	width: 100px;
+	width: 50%;
 }
-@media (min-width: 1200px) {
-	.series_log .winner,
-	.series_log .loser,
-	.series_log .date {
-		width: 123px;
-	}
-}
-@media (max-width: 979px) {
-	.series_log .winner,
-	.series_log .loser {
-		width: 114px;
-	}
-}
-.series_log_modal .winner,
-.series_log_modal .date {
-	width: 130px;
+.series_log_modal .winner {
+	float: none;
+	text-align: center;
+	width: auto;
 }
 .series_log.series_log_modal .series_log_data {
 	max-height: 180px;
@@ -266,13 +258,3 @@ h2 {
 		margin: 0 0 10px 10px;
 	}
 }
-/* Match Maker Button
----------------------------------*/
-.match_maker.btn {
-	color: #2A2A2A;
-	display: block;
-	font-weight: bold;
-	margin-bottom: 20px;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-

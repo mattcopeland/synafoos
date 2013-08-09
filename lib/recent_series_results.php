@@ -14,7 +14,7 @@ $stmt = $conn->prepare('SELECT series.series_id,series.players,series.team_1,ser
 		ON series.series_id = series_log.series_id
 		WHERE series_log.rescinded != 1
 		ORDER BY series_log.log_id
-		DESC LIMIT 10');
+		DESC LIMIT 5');
 $stmt->execute();
 while($series_log = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	// Doubles Match
@@ -44,12 +44,11 @@ while($series_log = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // HTML Payload
 echo '
-<h2>Recent Results</h2>
+<h2>Recent Series Results</h2>
 <section class="series_log">
 	<div class="series_log_head">
 		<div class="winner">Winner</div>
 		<div class="loser">Loser</div>
-		<div class="date">Date</div>
 	</div>
 	<div class="series_log_data">';
 		foreach ($series_log_arr as $sl)
@@ -58,20 +57,6 @@ echo '
 		<div class="series_log_match'; echo '" series_id="' . $sl['series_id'] . '">
 			<div class="winner">' . $sl['winner'] . '</div>
 			<div class="loser">' . $sl['loser'] . '</div>
-			<div class="date">';
-			if (date('Ymd',$sl['date_time']) == date('Ymd'))
-			{
-				$game_date = "Today";
-			}
-			else if ((date('Ymd',$sl['date_time']) + 1) == date('Ymd'))
-			{
-				$game_date = "Yesterday";
-			}
-			else
-			{
-				$game_date = date('n/j/Y',$sl['date_time']);
-			}
-			echo $game_date .'</div>
 		</div>
 		';
 		}

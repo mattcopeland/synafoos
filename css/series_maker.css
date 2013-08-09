@@ -41,7 +41,7 @@
 	left: 57px;
 	position: absolute;
 	top: 50px;
-	width: 230px;
+	width: 130px;
 	z-index: 2;
 }
 .mm_drop_zone {
@@ -63,6 +63,9 @@
 	text-align: center;
 	width: 46px;
 }
+.mm_drop_zone span:last-child {
+	margin-right: 0;
+}
 .error_1 .mm_drop_zone span:first-child {
 	background: #FFCCC9;
 	border-color: #FF928C;
@@ -79,7 +82,7 @@
 .mm_team_players .player_img:first-child {
 	margin-right: 30px;
 }
-#set_match.btn {
+#set_series.btn {
 	color: #2A2A2A;
 	display: block;
 	font-weight: bold;

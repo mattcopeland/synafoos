@@ -1,0 +1,89 @@
+#dd_player_pool {
+	margin: 0 0 10px -10px;
+}
+#dd_player_pool img {
+	margin: 0 0 10px 10px;
+}
+#dd_matchup {
+	overflow: hidden;
+}
+.dd_team {
+	background: #e6e6e6;
+	border-radius: 4px;
+	float: left;
+	height: 90px;
+	margin-bottom: 20px;
+	padding: 10px;
+	position: relative;
+	width: 230px;
+}
+#dd_team_1 {
+	
+} 
+.dd_team h2 {
+	margin: 0;
+	text-align: center;
+}
+#dd_team_2 {
+	float: right;
+}
+@media (max-width: 571px) {
+	#dd_team_2 {
+		float: left;
+	}
+}
+.dd_team.error {
+	background: #FFCCC9;
+}
+.dd_team_players {
+	height: 50px;
+	left: 57px;
+	position: absolute;
+	top: 50px;
+	width: 130px;
+	z-index: 2;
+}
+.dd_drop_zone {
+	left: 57px;
+	position: absolute;
+	top: 50px;
+	z-index: 1;
+}
+.dd_drop_zone span {
+	background: #ddd;
+	border: 2px dashed #bbb;
+	border-radius: 4px;
+	color: #bbb;
+	display: inline-block;
+	font-size: 30px;
+	height: 46px;
+	line-height: 46px;
+	margin-right: 30px;
+	text-align: center;
+	width: 46px;
+}
+.dd_drop_zone span:last-child {
+	margin-right: 0;
+}
+.error_1 .dd_drop_zone span:first-child {
+	background: #FFCCC9;
+	border-color: #FF928C;
+	color: #FF928C;
+}
+.error_2 .dd_drop_zone span {
+	background: #FFCCC9;
+	border-color: #FF928C;
+	color: #FF928C;
+}
+.dd_team_players .player_img {
+	margin: 0;
+}
+.dd_team_players .player_img:first-child {
+	margin-right: 30px;
+}
+#log_match_result.btn {
+	color: #2A2A2A;
+	display: block;
+	font-weight: bold;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
