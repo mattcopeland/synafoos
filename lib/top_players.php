@@ -18,7 +18,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 // HTML Payload
 echo '
 <h2>Top Players</h2>
-<section id="top_players">
+<section>
 	<ol>';
 	for ($i = 0; $i < 5; ++$i)
 	{

@@ -25,7 +25,7 @@ synafoos.matchResult = {
 		return false;
 	},
 	pushInPool: function(player) {
-		$('#player_pool').append(player);
+		$('#dd_player_pool').append(player);
 	},
 	dropInPool: function(target, event) {
 		event.preventDefault();
@@ -73,6 +73,20 @@ synafoos.matchResult = {
 						success: function(data) {
 							console.log(data);
 							$('#recent_match_results').html(data);
+						}
+					});
+					// Update the rankings
+					$.ajax({
+						type: "GET",
+						url: "lib/rank.php",
+						success: function(data) {
+							$.ajax({
+								type: "GET",
+								url: "lib/top_players.php",
+								success: function(data) {
+									$('#top_players').html(data);
+								}
+							});
 						}
 					});
 				}

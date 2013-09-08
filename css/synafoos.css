@@ -69,6 +69,9 @@ h2 {
 	color: #fff;
 	text-shadow: none;
 }
+.navbar .nav > li > a:hover {
+	color: #ffc515;
+}
 /* Series
 ---------------------------------*/
 .series,

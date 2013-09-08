@@ -42,7 +42,9 @@
 				<section id="recent_match_results">
 					<?php require_once('lib/recent_match_results.php'); ?>
 				</section>
-				<?php require_once('lib/top_players.php'); ?>
+				<section id="top_players">
+					<?php require_once('lib/top_players.php'); ?>
+				</section>
 				<?php require_once('lib/players_club.php'); ?>
 			</div>
 		</div>

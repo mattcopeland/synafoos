@@ -83,7 +83,15 @@ while($player = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	// Ranking Algorithim
 	$games_played = $player['wins'] + $player['losses'] + $player['wins_dbl'] + $player['losses_dbl'] + 1;
-	$player['points'] = round((((($player['wins']) * .25 - ($player['losses'] * .15)) + (($player['wins_dbl'] * .15) - ($player['losses_dbl'] * .05)) + ($games_played * .5)) / ($games_played / ($games_played * .75))),4);
+	$singles_points = ($player['wins'] * .5) - ($player['losses'] * .6);
+	$doubles_points = ($player['wins_dbl'] * .2) - ($player['losses_dbl'] * .3);
+	if ($games_played < 30) {
+		$experience_points = -10;
+	}
+	else {
+			$experience_points = $games_played / 10;
+	}
+	$player['points'] = round(($singles_points + $doubles_points + $experience_points),4);
 
 	// Update the points for each player	
 	$query = "";
